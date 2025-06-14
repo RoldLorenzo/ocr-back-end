@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -20,6 +19,8 @@ model User {
   email    String @unique
   password String
   chats    Chat[]
+
+  @@map("users")
 }
 
 model Chat {
@@ -28,6 +29,8 @@ model Chat {
   userId    Int
   messages  Message[]
   createdAt DateTime  @default(now())
+
+  @@map("chats")
 }
 
 model Message {
@@ -36,4 +39,6 @@ model Message {
   chat      Chat     @relation(fields: [chatId], references: [id])
   chatId    Int
   createdAt DateTime @default(now())
+
+  @@map("messages")
 }
