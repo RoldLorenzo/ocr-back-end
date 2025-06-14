@@ -1,16 +1,15 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { AuthDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
-    @Post('signup')
-    signup(@Body() body: any) {
-        console.log('Signup received: ', body)
-        return {message: "Signup Successful"};
-    }
+  @Post('signup')
+  signup(@Body() dto: AuthDto) {
+    return { message: 'Signup Successful' };
+  }
 
-    @Post('login')
-    login(@Body() body: any) {
-        console.log('Login received: ', body)
-        return {message: "Login Successful"};
-    }
+  @Post('login')
+  login() {
+    return { message: 'Login Successful' };
+  }
 }
