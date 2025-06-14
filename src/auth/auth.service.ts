@@ -2,9 +2,9 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as argon from 'argon2';
 import { LoginDto, SignupDto } from './dto';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -27,7 +27,9 @@ export class AuthService {
         },
       });
 
-      return this.signToken(user.id, user.email);
+      return {
+        token: await this.signToken(user.id, user.email),
+      };
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
         throw new ForbiddenException('Email já existe');
@@ -49,7 +51,7 @@ export class AuthService {
 
     if (!pwMatches) throw new ForbiddenException('Email ou senha incorretos');
 
-    return this.signToken(user.id, user.email);
+    return { token: await this.signToken(user.id, user.email) };
   }
 
   signToken(userId: number, email: string) {
@@ -59,7 +61,7 @@ export class AuthService {
     };
 
     return this.jwt.signAsync(payload, {
-      expiresIn: '15m',
+      expiresIn: '45m',
       secret: this.config.get<string>('JWT_SECRET'),
     });
   }
