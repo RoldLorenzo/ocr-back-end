@@ -6,6 +6,7 @@ import {
   Get,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 
@@ -31,7 +32,7 @@ export class ChatController {
     return this.chatService.createChat(userId, createChatDto);
   }
 
-  @Post('message')
+  @Post('send')
   sendMessage(
     @GetUser('id') userId: number,
     @Body() sendMessageDto: SendMessageDto,
@@ -44,7 +45,7 @@ export class ChatController {
     return this.chatService.getChats(userId);
   }
 
-  @Get('messages')
+  @Post('messages')
   getMessagesFromChat(
     @GetUser('id') userId: number,
     @Body() getChatDto: GetChatDto,

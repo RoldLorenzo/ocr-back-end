@@ -34,10 +34,10 @@ export class ChatService {
 
     const initial_message: MessageDto = {
       chatId: chat.id,
-      text: 'O que diz nessa imagem?',
+      text: 'Qual o texto dessa imagem?',
       image: dto.base64Image,
     };
-    this.messageService.sendMessage(initial_message);
+    await this.messageService.sendMessage(initial_message);
 
     return chat;
   }
@@ -78,7 +78,7 @@ export class ChatService {
       text: dto.text,
       previousMessages: convertedPreviousMessages,
     };
-    return this.messageService.sendMessage(message);
+    return await this.messageService.sendMessage(message);
   }
 
   async getChats(userId: number) {
@@ -89,18 +89,21 @@ export class ChatService {
   }
 
   async getMessagesFromChat(userId: number, dto: GetChatDto) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+    const chat = await this.prisma.chat.findUnique({
+      where: { id: dto.id },
     });
 
-    if (!user) return new NotFoundException('Usuário não existe');
+    if (!chat) return new NotFoundException('Chat não existe');
 
-    if (user.id !== userId)
+    if (chat.userId !== userId)
       return new ForbiddenException('Chat não pertence à esse usuário');
 
-    return this.prisma.message.findMany({
+    const messages = await this.prisma.message.findMany({
       where: { chatId: dto.id },
+      orderBy: { createdAt: 'asc' },
     });
+
+    return messages;
   }
 
   async renameChat(userId: number, dto: ChatRenameDto) {

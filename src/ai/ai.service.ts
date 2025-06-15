@@ -11,7 +11,6 @@ export class AiService {
   constructor(private configService: ConfigService) {}
 
   async sendMessagesToAI(messages: Message[]) {
-    console.log(messages);
     const response = await axios.post(
       this.modelURL,
       {
