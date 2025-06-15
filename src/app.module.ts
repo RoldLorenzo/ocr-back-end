@@ -6,6 +6,7 @@ import { AiModule } from './ai/ai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { MessageModule } from './message/message.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { MessageModule } from './message/message.module';
     PrismaModule,
     UserModule,
     MessageModule,
+    ChatModule,
   ],
 })
 export class AppModule {}
